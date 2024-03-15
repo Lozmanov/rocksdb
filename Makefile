@@ -8,6 +8,7 @@
 
 BASH_EXISTS := $(shell which bash)
 SHELL := $(shell which bash)
+PWD := $(shell pwd)
 include common.mk
 
 CLEAN_FILES = # deliberately empty, so we can append below.
@@ -2339,7 +2340,8 @@ rocksdbjavastaticdockerx86:
 
 rocksdbjavastaticdockerx86_64:
 	mkdir -p java/target
-	docker run --rm --name rocksdb_linux_x64-be --attach stdin --attach stdout --attach stderr --volume $(HOME)/.m2:/root/.m2:ro --volume `pwd`:/rocksdb-host:ro --volume /rocksdb-local-build --volume `pwd`/java/target:/rocksdb-java-target --env DEBUG_LEVEL=$(DEBUG_LEVEL) --env J=$(J) evolvedbinary/rocksjava:centos6_x64-be /rocksdb-host/java/crossbuild/docker-build-linux.sh
+	current=$(PWD)
+	docker run --rm --name rocksdb_linux_x64-be --attach stdin --attach stdout --attach stderr --volume $(HOME)/.m2:/root/.m2:ro --volume ./:/rocksdb-host:ro --volume /rocksdb-local-build --volume `pwd`/java/target:/rocksdb-java-target --env DEBUG_LEVEL=$(DEBUG_LEVEL) --env J=$(J) evolvedbinary/rocksjava:centos6_x64-be bash -c "pwd; ls -lah; ls -lah /rocksdb-host; ls -lah /rocksdb-host/java/; ls -lah /rocksdb-host/java/target; ls -lah /rocksdb-host/java/crossbuild/"
 
 rocksdbjavastaticdockerppc64le:
 	mkdir -p java/target
